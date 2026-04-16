@@ -153,24 +153,9 @@ body {
 </head>
 <body>
 
-<!-- 共用控制列 -->
-<div class="controls">
-  <div class="seg-group" id="gridGroup">
-    <button class="active" data-grid="four">四分格</button>
-    <button data-grid="nine">九宮格</button>
-  </div>
-</div>
-<div class="controls">
-  <button class="font-btn active" data-font="'LXGW WenKai TC',cursive">楷書</button>
-  <button class="font-btn" data-font="'Noto Serif TC',serif">明體</button>
-  <button class="font-btn" data-font="'Noto Sans TC',sans-serif">黑體</button>
-  <button class="font-btn" data-font="'Ma Shan Zheng',cursive">毛楷</button>
-  <button class="font-btn" data-font="'ZCOOL KuaiLe',cursive">圓體</button>
-</div>
-
 <!-- 第一格 -->
 <div class="char-unit">
-  <input class="char-input" maxlength="1" placeholder="輸入字">
+  <input class="char-input" maxlength="1" placeholder="生字1">
   <div class="grid four">
     <div class="char"></div>
   </div>
@@ -179,11 +164,26 @@ body {
 
 <!-- 第二格 -->
 <div class="char-unit">
-  <input class="char-input" maxlength="1" placeholder="輸入字">
+  <input class="char-input" maxlength="1" placeholder="生字2">
   <div class="grid four">
     <div class="char"></div>
   </div>
   <a class="dict-link" href="#" target="_blank" hidden>教育部國語辭典 →</a>
+</div>
+
+<!-- 共用控制列 -->
+ <div class="controls">
+  <button class="font-btn active" data-font="'LXGW WenKai TC',cursive">楷書</button>
+  <button class="font-btn" data-font="'Noto Serif TC',serif">明體</button>
+  <button class="font-btn" data-font="'Noto Sans TC',sans-serif">黑體</button>
+  <button class="font-btn" data-font="'Ma Shan Zheng',cursive">毛楷</button>
+  <button class="font-btn" data-font="'ZCOOL KuaiLe',cursive">圓體</button>
+</div>
+<div class="controls">
+  <div class="seg-group" id="gridGroup">
+    <button class="active" data-grid="four">四分格</button>
+    <button data-grid="nine">九宮格</button>
+  </div>
 </div>
 
 <script>
