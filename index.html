@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>練字格</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 24px 12px 40px;
+  background: #f7f7f7;
+  color: #333;
+}
+
+/* ── 共用控制列 ── */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.seg-group {
+  display: inline-flex;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.seg-group button {
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  font-size: clamp(12px, 3vw, 14px);
+  padding: 0 14px;
+  min-height: 40px;
+  border: none;
+  border-right: 1px solid #bbb;
+  background: #fff;
+  cursor: pointer;
+  color: #555;
+  transition: background 0.12s, color 0.12s;
+}
+
+.seg-group button:last-child { border-right: none; }
+.seg-group button.active { background: #4a90d9; color: #fff; }
+
+.font-btn {
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  font-size: clamp(11px, 2.8vw, 13px);
+  padding: 0 12px;
+  min-height: 34px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+  color: #555;
+  transition: background 0.12s, color 0.12s;
+}
+
+.font-btn.active {
+  background: #5a9e6a;
+  color: #fff;
+  border-color: #5a9e6a;
+}
+
+/* ── 字格單元 ── */
+.char-unit {
+  margin-bottom: 24px;
+}
+
+.char-unit input {
+  font-size: clamp(18px, 5vw, 24px);
+  padding: 6px 12px;
+  width: clamp(100px, 36vw, 140px);
+  text-align: center;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-family: inherit;
+  touch-action: manipulation;
+  margin-bottom: 10px;
+}
+
+/* ── 格線容器 ── */
+.grid {
+  width: min(220px, 72vw);
+  height: min(220px, 72vw);
+  border: 2px solid #aaa;
+  margin: 0 auto 8px;
+  background-color: #fff;
+
+  /* 四分格（預設）*/
+  background-image:
+    linear-gradient(to bottom,
+      transparent calc(50% - 0.5px),
+      #ccc calc(50% - 0.5px),
+      #ccc calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)),
+    linear-gradient(to right,
+      transparent calc(50% - 0.5px),
+      #ccc calc(50% - 0.5px),
+      #ccc calc(50% + 0.5px),
+      transparent calc(50% + 0.5px));
+}
+
+.grid.nine {
+  background-image:
+    linear-gradient(to bottom,
+      transparent calc(33.33% - 0.5px), #ccc calc(33.33% - 0.5px),
+      #ccc calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px),
+      transparent calc(66.67% - 0.5px), #ccc calc(66.67% - 0.5px),
+      #ccc calc(66.67% + 0.5px), transparent calc(66.67% + 0.5px)),
+    linear-gradient(to right,
+      transparent calc(33.33% - 0.5px), #ccc calc(33.33% - 0.5px),
+      #ccc calc(33.33% + 0.5px), transparent calc(33.33% + 0.5px),
+      transparent calc(66.67% - 0.5px), #ccc calc(66.67% - 0.5px),
+      #ccc calc(66.67% + 0.5px), transparent calc(66.67% + 0.5px));
+}
+
+/* 字 */
+.char {
+  font-size: min(180px, 59vw);
+  font-family: "Noto Sans TC", sans-serif;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 中文字型 em box 偏低，補上小幅上移 */
+  padding-bottom: 0.08em;
+  height: min(220px, 72vw);
+  user-select: none;
+  line-height: 1;
+}
+
+/* 教育部連結 */
+.dict-link {
+  font-size: clamp(12px, 3vw, 13px);
+  color: #4a90d9;
+  text-decoration: none;
+  border-bottom: 1px dashed #b0c8ef;
+  display: inline-block;
+}
+
+.dict-link:hover { color: #2266bb; }
+</style>
+</head>
+<body>
+
+<!-- 共用控制列 -->
+<div class="controls">
+  <div class="seg-group" id="gridGroup">
+    <button class="active" data-grid="four">四分格</button>
+    <button data-grid="nine">九宮格</button>
+  </div>
+</div>
+<div class="controls">
+  <button class="font-btn active" data-font="'DFKai-SB','BiauKai','標楷體',cursive">標楷體</button>
+  <button class="font-btn" data-font="'PMingLiU','新細明體',serif">新細明體</button>
+  <button class="font-btn" data-font="'Microsoft JhengHei','PingFang TC',sans-serif">正黑體</button>
+  <button class="font-btn" data-font="'Ma Shan Zheng',cursive">毛楷</button>
+  <button class="font-btn" data-font="'FangSong','仿宋',serif">仿宋體</button>
+</div>
+
+<!-- 第一格 -->
+<div class="char-unit">
+  <input class="char-input" maxlength="1" placeholder="輸入字">
+  <div class="grid four">
+    <div class="char"></div>
+  </div>
+  <a class="dict-link" href="#" target="_blank" hidden>教育部國語辭典 →</a>
+</div>
+
+<!-- 第二格 -->
+<div class="char-unit">
+  <input class="char-input" maxlength="1" placeholder="輸入字">
+  <div class="grid four">
+    <div class="char"></div>
+  </div>
+  <a class="dict-link" href="#" target="_blank" hidden>教育部國語辭典 →</a>
+</div>
+
+<script>
+const units = document.querySelectorAll(".char-unit");
+const allGrids = document.querySelectorAll(".grid");
+const allChars = document.querySelectorAll(".char");
+
+// ── 格線切換（同步兩格）────────────────────────
+document.querySelectorAll("#gridGroup button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#gridGroup button")
+      .forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const mode = btn.dataset.grid;
+    allGrids.forEach(g => {
+      g.className = "grid" + (mode === "nine" ? " nine" : " four");
+    });
+  });
+});
+
+// ── 字體切換（同步兩格）────────────────────────
+document.querySelectorAll(".font-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".font-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const font = btn.dataset.font;
+    allChars.forEach(c => { c.style.fontFamily = font; });
+  });
+});
+
+// ── 各自的輸入處理 ────────────────────────────
+units.forEach(unit => {
+  const input   = unit.querySelector(".char-input");
+  const charEl  = unit.querySelector(".char");
+  const link    = unit.querySelector(".dict-link");
+
+  input.addEventListener("input", () => {
+    const val = input.value.trim();
+
+    if (!val) {
+      charEl.innerText = "";
+      link.hidden = true;
+      return;
+    }
+
+    charEl.innerText = val;
+    link.href = "https://dict.revised.moe.edu.tw/search.jsp?md=1&word=" +
+      encodeURIComponent(val);
+    link.hidden = false;
+    input.value = "";
+  });
+});
+</script>
+
+</body>
+</html>
